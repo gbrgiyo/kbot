@@ -1,17 +1,8 @@
-APP=$(shell basename $(shell git remote get-url origin))
+APP= $(shell basename $(shell git remote get-url origin))
 REGISTRY=ghcr.io/gbrgiyo
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS=linux# darwin windows
-TARGETARCH=amd64# amd64 arm64
-
-linux:
-	$(MAKE) image TARGETOS=linux TARGETARCH=${TARGETARCH}
-
-windows:
-	$(MAKE) image TARGETOS=windows TARGETARCH=${TARGETARCH}
-
-macos:
-	$(MAKE) image TARGETOS=darwin TARGETARCH=${TARGETARCH}
+TARGETOS=linux #linux darwin windows
+TARGETARCH=arm64 #amd64 arm64
 
 format:
 	gofmt -s -w ./
@@ -29,7 +20,7 @@ build: format get
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags "-X="github.com/gbrgiyo/kbot/cmd.appVersion=${VERSION}
 
 image:
-	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}  --build-arg TARGETARCH=${TARGETARCH}
 
 push:
 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
