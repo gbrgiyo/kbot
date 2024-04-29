@@ -8,10 +8,10 @@ image:
   repository: gbrgiyo
 # Overrides the image tag whose default is the chart appVersion.
   tag: "v1.0.0-66e761b"
-
+  arch: amd64
 secret:
-  name: kbot
-  tokenKey: token
-  tokenName: TELE_TOKEN
-  
-
+  name: "kbot"
+  env: "TELE_TOKEN"
+  key: "token"
+securityContext:
+  privileged: true
